@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
@@ -5,7 +6,7 @@ import { AuthService } from '../../config/services/auth-service';
 
 @Component({
   selector: 'app-chat',
-  imports: [FormsModule],
+  imports: [FormsModule, DatePipe],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })
@@ -18,16 +19,22 @@ export class Chat implements OnInit, OnDestroy {
   mensaje : string = '';
   usuario: string = '';
 
-  enviar(){
-    console.log(this.mensaje, this.usuario)
-    this.AuthService.enviarMensaje(this.usuario,this.mensaje);
-    this.mensaje ='';
+  async enviar(): Promise<void> {
+    const u = this.usuario.trim();
+    const m = this.mensaje.trim();
+    if (!u || !m) {
+      return;
+    }
+    await this.AuthService.enviarMensaje(u, m);
+    this.mensaje = '';
   }
 
   async ngOnInit(): Promise<void> {
-        const data = (await this.AuthService.traerMensajesYaExistentes()) as IMensaje[];
+    await this.AuthService.resetMensajesRealtimeChannel();
 
-        this.mensajes.set(data);
+    const data = (await this.AuthService.traerMensajesYaExistentes()) as IMensaje[];
+
+    this.mensajes.set(data);
 
     this.AuthService.canal
       .on(
@@ -48,8 +55,8 @@ export class Chat implements OnInit, OnDestroy {
       .subscribe();
   }
 
-   ngOnDestroy() {
-    this.AuthService.canal.unsubscribe();
+  ngOnDestroy(): void {
+    void this.AuthService.resetMensajesRealtimeChannel();
   }
 
 }

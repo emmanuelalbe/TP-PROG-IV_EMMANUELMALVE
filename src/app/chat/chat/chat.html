@@ -1,0 +1,60 @@
+<div class="chat-page">
+  <header class="chat-page-header">
+    <h1 class="chat-page-title">Chat</h1>
+    <p class="chat-page-subtitle">Canal general · estilo consola</p>
+  </header>
+
+  <div class="irc-window" role="region" aria-label="Ventana de chat">
+    <div class="irc-titlebar">
+      <span class="irc-titlebar-icon" aria-hidden="true"></span>
+      <span class="irc-titlebar-text"># general</span>
+      <span class="irc-titlebar-meta">Supabase · realtime</span>
+    </div>
+
+    <div class="irc-body">
+      <div class="irc-nick-row">
+        <label class="irc-label" for="usuario">Apodo</label>
+        <input
+          class="irc-input irc-input-nick"
+          name="usuario"
+          id="usuario"
+          type="text"
+          [(ngModel)]="usuario"
+          placeholder="Tu nombre en el canal"
+          autocomplete="nickname"
+        />
+      </div>
+
+      <div class="irc-messages" id="c-mensajes" tabindex="0">
+        @for (msj of mensajes(); track msj.id) {
+          <div class="irc-line">
+            <span class="irc-bracket">[</span><span class="irc-ts">{{
+              msj.creado_en | date: 'HH:mm:ss'
+            }}</span
+            ><span class="irc-bracket">]</span>
+            <span class="irc-nick">&lt;{{ msj.usuario }}&gt;</span>
+            <span class="irc-text">{{ msj.contenido }}</span>
+          </div>
+        } @empty {
+          <div class="irc-empty">* No hay mensajes todavía. Escribí abajo y pulsá Enviar.</div>
+        }
+      </div>
+
+      <div class="irc-inputbar" id="c-enviar">
+        <label class="irc-sr-only" for="mensaje">Mensaje</label>
+        <input
+          class="irc-input irc-input-msg"
+          name="mensaje"
+          id="mensaje"
+          type="text"
+          [(ngModel)]="mensaje"
+          placeholder="Escribí un mensaje…"
+          (keydown.enter)="enviar()"
+        />
+        <button type="button" class="irc-btn" id="enviar" (click)="enviar()">
+          Enviar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

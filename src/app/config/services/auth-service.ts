@@ -19,7 +19,6 @@ export class AuthService {
 
   supabase: SupabaseClient<any, 'public', 'public', any, any>;
 
-  /** Canal Realtime reutilizado por el chat para `postgres_changes` en `mensajes`. */
   canal!: RealtimeChannel;
 
   usuarioActual = signal<User | null>(null);
@@ -28,7 +27,7 @@ export class AuthService {
 
   constructor() {
     this.supabase = createClient(this.supabaseUrl, this.publicKey);
-    this.canal = this.supabase.channel('mensajes-chat');
+    this.canal = this.createMensajesChannel();
     this.router = inject(Router);
 
     this.supabase.auth.onAuthStateChange((event, session) => {
@@ -41,6 +40,18 @@ export class AuthService {
     });
   }
 
+  private createMensajesChannel(): RealtimeChannel {
+    return this.supabase.channel('mensajes-chat');
+  }
+
+  async resetMensajesRealtimeChannel(): Promise<void> {
+    try {
+      await this.supabase.removeChannel(this.canal);
+    } catch {
+      /* canal ya removido o en estado intermedio */
+    }
+    this.canal = this.createMensajesChannel();
+  }
 
   async registrarUsuario(datos: usuarioRegistro): Promise<{ ok: true } | { ok: false; error: string }> {
     const response: AuthResponse = await this.supabase.auth.signUp({

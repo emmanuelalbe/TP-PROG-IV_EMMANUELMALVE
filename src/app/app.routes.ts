@@ -53,6 +53,10 @@ export const routes: Routes = [
   {
     path: 'registro',
     loadComponent: () => import('./pages/registro/registro').then(m => m.Registro)
+  },
+  {
+    path: 'chat',
+    loadComponent: () => import('./chat/chat/chat').then(m => m.Chat)
   }
 
 ];

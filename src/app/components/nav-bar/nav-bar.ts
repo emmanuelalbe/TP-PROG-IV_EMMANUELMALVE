@@ -23,7 +23,8 @@ export class NavBar {
     { label: 'Home', route: 'home', auth: true },
     { label: 'Ahorcado', route: 'ahorcado', auth: true },
     { label: 'Preguntados', route: 'preguntados', auth: true },
-    { label: 'Mayor o Menor', route: 'mayor-menor', auth: true }
+    { label: 'Mayor o Menor', route: 'mayor-menor', auth: true },
+    { label: 'Chat', route: 'chat', auth: true }
   ];
 
   navegar(ruta: string) {

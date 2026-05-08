@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-    background-image: url('/image/fondoRegistro.png');
+    background-image: url('/image/fondoRegistro.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;

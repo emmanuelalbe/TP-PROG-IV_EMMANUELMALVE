@@ -15,23 +15,23 @@ export class CardJuegos {
   misJuegos = [
     {
       title: 'Ahorcado',
-      image: '/image/logo.png',
-      description: 'Una aventura épica en el reino de Hyrule.'
+      image: '/image/ahorcado.png',
+      description: 'Adiviná la palabra letra por letra antes de quedarte sin intentos. Cada error acerca el final, pensá bien tus jugadas.'
     },
     {
       title: 'Mayor o menor',
-      image: '/image/logo.png',
-      description: 'Un viaje de plataformas en 3D por todo el mundo.'
+      image: '/image/mayor.png',
+      description: 'Elegí si la próxima carta/número será mayor o menor y sumá puntos. Si te equivocás perdés la racha, así que jugá con estrategia.'
     },
     {
       title: 'Preguntados',
-      image: '/image/logo.png',
-      description: 'Un RPG de acción en un vasto mundo abierto.'
+      image: '/image/preguntados.png',
+      description: 'Respondé preguntas de cultura general y competí por categorías. Mientras más aciertos tengas, más rápido completás todas las áreas.'
     },
     {
       title: 'Juego PROPIO',
       image: '/image/logo.png',
-      description: 'Todabia no se que juego poner, pero va a ser un juegazo'
+      description: 'Un minijuego original del proyecto: simple, rápido y pensado para divertirse. La idea es que sea fácil de aprender y difícil de dominar.'
     }
   ];
 }

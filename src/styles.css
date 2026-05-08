@@ -9,7 +9,9 @@ html, body {
 }
 
 body {
-    background-image: url('/image/fondoRegistro.jpg');
+    background-image:
+        linear-gradient(rgb(62, 3, 3), rgba(209, 189, 189, 0)),
+        url('/image/fondoRegistro.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;

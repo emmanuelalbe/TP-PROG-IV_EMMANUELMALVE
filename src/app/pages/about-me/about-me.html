@@ -1,55 +1,12 @@
 <div class="about-container">
-  <div class="about-hero">
-    <div class="about-hero-text">
-      <h2>Sobre mí</h2>
-      <p class="about-subtitle">
-        Perfil y datos públicos desde GitHub.
-      </p>
-    </div>
-  </div>
-
+  <h1>Sobre mí</h1>
   <div class="about-content">
-    <div class="about-card">
-      <div *ngIf="usuario() as user; else cargando">
-        <app-card
-          [title]="user.name || user.login"
-          [image]="user.avatar_url"
-          [description]="user.bio || 'Sin bio disponible.'">
-        </app-card>
-
-        <div class="about-stats">
-          <div class="stat">
-            <span class="stat-label">Usuario</span>
-            <span class="stat-value">{{ user.login }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Repos</span>
-            <span class="stat-value">{{ user.public_repos }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Seguidores</span>
-            <span class="stat-value">{{ user.followers }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Siguiendo</span>
-            <span class="stat-value">{{ user.following }}</span>
-          </div>
-        </div>
-
-        <div class="about-actions">
-          <a class="btn-link" [href]="user.html_url" target="_blank" rel="noreferrer">
-            Ver perfil en GitHub
-          </a>
-        </div>
-      </div>
-
-      <ng-template #cargando>
-        <div class="loading">
-          <div class="skeleton-line w60"></div>
-          <div class="skeleton-line w90"></div>
-          <div class="skeleton-line w75"></div>
-        </div>
-      </ng-template>
+    <div class="grid">
+      <app-card
+        [title]="cardTitle()"
+        [image]="cardImage()"
+        [description]="cardDescription()">
+      </app-card>
     </div>
   </div>
 </div>

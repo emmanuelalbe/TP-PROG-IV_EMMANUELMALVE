@@ -33,7 +33,7 @@
 }
 
 .card-title {
-  margin: 0;
+  margin: 2;
   font-size: 20px;
   font-weight: 900;
   letter-spacing: 0.2px;
@@ -70,6 +70,6 @@
   font-size: 16px;
   line-height: 1.45;
   opacity: 0.95;
-  color: #111827;
+  color: #010102;
   text-align: justify;
 }

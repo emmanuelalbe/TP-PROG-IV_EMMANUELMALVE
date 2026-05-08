@@ -7,29 +7,18 @@
   gap: 18px;
 }
 
-/* Hero */
-.about-hero {
-  width: 100%;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 18px 18px 14px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-  color: white;
-}
-
-.about-hero-text h2 {
-  margin: 0 0 6px;
-  font-size: 26px;
-  letter-spacing: 0.2px;
-}
-
-.about-subtitle {
-  margin: 0;
-  opacity: 0.95;
-  font-size: 14px;
+/* Mismo estilo que h1 en card-juegos */
+h1 {
+  text-align: center;
+  font-size: 70px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 4px 3px 7px rgba(0, 0, 0, 0.955);
+  margin-top: 50px;
+  margin-bottom: 20px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color: rgb(19, 208, 47);
 }
 
 /* Content */
@@ -39,81 +28,11 @@
   margin: 0 auto;
 }
 
-.about-card {
-  border-radius: 18px;
-  padding: 18px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-}
-
-.about-stats {
-  margin-top: 16px;
+/* Misma grilla que en card-juegos (home / juegos) */
+.grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.stat {
-  background: rgba(0, 0, 0, 0.16);
-  border-radius: 14px;
-  padding: 12px;
-  color: white;
-}
-
-.stat-label {
-  display: block;
-  font-size: 12px;
-  opacity: 0.9;
-  margin-bottom: 6px;
-}
-
-.stat-value {
-  display: block;
-  font-size: 15px;
-  font-weight: 800;
-}
-
-.about-actions {
-  margin-top: 14px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.btn-link {
-  display: inline-block;
-  text-decoration: none;
-  font-weight: 800;
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: #06b6d4;
-  color: white;
-  transition: 0.2s;
-}
-
-.btn-link:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 15px rgba(6, 182, 212, 0.25);
-}
-
-/* Loading skeleton */
-.loading {
-  padding: 8px 4px;
-}
-
-.skeleton-line {
-  height: 12px;
-  border-radius: 999px;
-  margin: 10px 0;
-  background: rgba(255, 255, 255, 0.25);
-}
-
-.w60 { width: 60%; }
-.w75 { width: 75%; }
-.w90 { width: 90%; }
-
-@media (max-width: 720px) {
-  .about-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }

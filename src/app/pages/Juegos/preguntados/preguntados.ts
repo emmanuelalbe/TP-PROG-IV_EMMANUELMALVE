@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { AuthService } from '../../../config/services/auth-service';
-import { PreguntadosService, TriviaQuestion } from '../../../config/services/servicio-preguntados';
+import { PreguntadosService } from '../../../config/services/servicio-preguntados';
 
 type PreguntaUI = {
   category: string;
@@ -11,6 +11,12 @@ type PreguntaUI = {
   options: string[];
 };
 
+type FilaRankingPreguntados = {
+  email: string | null;
+  aciertos: number;
+  total_preguntas: number;
+};
+
 @Component({
   selector: 'app-preguntados',
   standalone: true,
@@ -18,9 +24,10 @@ type PreguntaUI = {
   templateUrl: './preguntados.html',
   styleUrl: './preguntados.css',
 })
-export class Preguntados implements OnInit {
+export class Preguntados implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private preguntadosService = inject(PreguntadosService);
+  private rankingAuthSub: { unsubscribe: () => void } | null = null;
 
   cargando = false;
   error = '';
@@ -37,9 +44,29 @@ export class Preguntados implements OnInit {
 
   terminado = false;
   guardando = false;
+  errorGuardado = '';
+
+  ranking: FilaRankingPreguntados[] = [];
 
   ngOnInit() {
+    void this.cargarRanking();
+    const { data } = this.authService.supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (
+          (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') &&
+          session
+        ) {
+          void this.cargarRanking();
+        }
+      },
+    );
+    this.rankingAuthSub = data.subscription;
     void this.iniciarPartida();
+  }
+
+  ngOnDestroy(): void {
+    this.rankingAuthSub?.unsubscribe();
+    this.rankingAuthSub = null;
   }
 
   get preguntaActual(): PreguntaUI | null {
@@ -49,6 +76,7 @@ export class Preguntados implements OnInit {
   async iniciarPartida() {
     this.cargando = true;
     this.error = '';
+    this.errorGuardado = '';
     this.terminado = false;
     this.guardando = false;
 
@@ -112,11 +140,31 @@ export class Preguntados implements OnInit {
   async finalizar() {
     this.terminado = true;
     this.guardando = true;
-    await this.authService.guardarPartidaPreguntados({
-      aciertos: this.aciertos,
-      total_preguntas: this.preguntas.length
-    });
-    this.guardando = false;
+    this.errorGuardado = '';
+    try {
+      await this.authService.guardarPartidaPreguntados({
+        aciertos: this.aciertos,
+        total_preguntas: this.preguntas.length
+      });
+      await this.cargarRanking();
+    } catch (e: unknown) {
+      const msg =
+        e && typeof e === 'object' && 'message' in e
+          ? String((e as { message: unknown }).message)
+          : 'No se pudo guardar la partida.';
+      this.errorGuardado = `${msg} En Supabase: tabla partidas_preguntados y políticas (ver supabase-preguntados-rls.sql).`;
+    } finally {
+      this.guardando = false;
+    }
+  }
+
+  async cargarRanking() {
+    try {
+      this.ranking = await this.authService.obtenerRankingPreguntados();
+    } catch (e) {
+      console.error('Error ranking Preguntados', e);
+      this.ranking = [];
+    }
   }
 
   esCorrecta(opcion: string): boolean {
@@ -134,7 +182,6 @@ export class Preguntados implements OnInit {
     this.opciones = q.options;
   }
 
-  // OpenTriviaDB viene con HTML entities
   decodeHtml(texto: string): string {
     const doc = new DOMParser().parseFromString(texto, 'text/html');
     return doc.documentElement.textContent ?? texto;

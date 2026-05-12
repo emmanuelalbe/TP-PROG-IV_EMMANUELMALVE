@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../config/services/auth-service';
 
@@ -9,9 +9,10 @@ import { AuthService } from '../../../config/services/auth-service';
   templateUrl: './mayor-menor.html',
   styleUrls: ['./mayor-menor.css'],
 })
-export class MayorMenor implements OnInit {
+export class MayorMenor implements OnInit, OnDestroy {
 
   authService = inject(AuthService);
+  private rankingAuthSub: { unsubscribe: () => void } | null = null;
 
   cartaActual: number = 0;
   cartaSiguiente: number = 0;
@@ -24,18 +25,31 @@ export class MayorMenor implements OnInit {
 
   ranking: any[] = [];
 
-  // =========================
   ngOnInit() {
+    void this.cargarRanking();
+    const { data } = this.authService.supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (
+          (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') &&
+          session
+        ) {
+          void this.cargarRanking();
+        }
+      },
+    );
+    this.rankingAuthSub = data.subscription;
     this.iniciarJuego();
-    this.cargarRanking();
   }
 
-  // =========================
+  ngOnDestroy(): void {
+    this.rankingAuthSub?.unsubscribe();
+    this.rankingAuthSub = null;
+  }
+
   obtenerCartaRandom(): number {
     return Math.floor(Math.random() * 13) + 1;
   }
 
-  // =========================
   iniciarJuego() {
     this.cartaActual = this.obtenerCartaRandom();
     this.puntaje = 0;
@@ -44,14 +58,12 @@ export class MayorMenor implements OnInit {
     this.mensaje = '';
   }
 
-  // =========================
   jugar(eleccion: 'mayor' | 'menor') {
 
     if (this.juegoTerminado) return;
 
     this.cartaSiguiente = this.obtenerCartaRandom();
 
-    // 🔥 evitar empate
     if (this.cartaSiguiente === this.cartaActual) {
       this.mensaje = 'Empate';
       return;
@@ -80,7 +92,6 @@ export class MayorMenor implements OnInit {
     this.verificarEstado();
   }
 
-  // =========================
   async verificarEstado() {
 
     if (this.vidas <= 0) {
@@ -96,7 +107,6 @@ export class MayorMenor implements OnInit {
     }
   }
 
-  // =========================
   async cargarRanking() {
     try {
       this.ranking = await this.authService.obtenerRankingMayorMenor();

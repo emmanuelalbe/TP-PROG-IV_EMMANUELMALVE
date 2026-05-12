@@ -1,4 +1,3 @@
-/* Fondo general */
 #fondo {
     background-image: url('/image/fondoRegistro.png');
     background-size: cover;
@@ -11,7 +10,6 @@
     align-items: center;
 }
 
-/* Card principal */
 .card {
     width: 100%;
     max-width: 400px;
@@ -23,7 +21,6 @@
     backdrop-filter: blur(5px);
 }
 
-/* Título */
 .card-title {
     background: linear-gradient(135deg, #6ec6ff, #42a5f5);
     color: #000;
@@ -34,19 +31,16 @@
     letter-spacing: 1px;
 }
 
-/* Formulario */
 .card-form {
     padding: 25px;
 }
 
-/* Grupo */
 .form-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 15px;
 }
 
-/* Labels */
 .form-group label {
     margin-bottom: 8px;
     font-weight: bold;
@@ -55,7 +49,6 @@
     font-size: 14px;
 }
 
-/* Inputs */
 input {
     padding: 12px;
     border-radius: 10px;
@@ -65,13 +58,11 @@ input {
     outline: none;
 }
 
-/* Focus en inputs */
 input:focus {
     border: 1px solid #42a5f5;
     box-shadow: 0 0 8px rgba(66, 165, 245, 0.4);
 }
 
-/* Botón */
 .btn-submit {
     width: 100%;
     padding: 14px;
@@ -86,13 +77,11 @@ input:focus {
     font-size: 15px;
 }
 
-/* Hover botón */
 .btn-submit:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 15px rgba(66, 165, 245, 0.4);
 }
 
-/* Inicio rápido */
 .quick-login {
     margin-top: 16px;
     padding-top: 14px;
@@ -130,13 +119,11 @@ input:focus {
     box-shadow: 0 8px 15px rgba(29, 78, 216, 0.18);
 }
 
-/* ERROR */
 .error {
     border: 2px solid rgba(255, 0, 0, 0.5);
     background-color: #ffe5e5;
 }
 
-/* Mensajes de error */
 .small-error {
     color: #d32f2f;
     font-size: 12px;
@@ -144,7 +131,6 @@ input:focus {
     text-align: left;
 }
 
-/* Animación suave */
 .card {
     animation: fadeIn 0.6s ease-in-out;
 }
@@ -160,9 +146,6 @@ input:focus {
     }
 }
 
-/* ======================
-   MODAL ERROR LOGIN
-   ====================== */
 .modal-backdrop {
     position: fixed;
     inset: 0;

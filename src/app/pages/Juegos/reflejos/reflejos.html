@@ -1,0 +1,106 @@
+<div class="reflejos-page">
+  <header class="reflejos-header">
+    <h1 class="reflejos-title">Reflejos</h1>
+    <p class="reflejos-subtitle">
+      Esperá el verde y tocá el panel lo más rápido que puedas.
+    </p>
+  </header>
+
+  @if (errorServidor(); as err) {
+    <div class="reflejos-alert" role="alert">{{ err }}</div>
+  }
+
+  <div class="reflejos-layout">
+    <section class="reflejos-main glass">
+      <div class="stats-bar">
+        <div class="stat-pill">
+          <span class="stat-pill__label">Partidas</span>
+          <span class="stat-pill__value">{{ partidasJugadas() }}</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill__label">Tu récord</span>
+          <span class="stat-pill__value">
+            @if (recordPersonal() !== null) {
+              {{ recordPersonal() }} ms
+            } @else {
+              —
+            }
+          </span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn--primary"
+        *ngIf="fase() === 'idle'"
+        (click)="comenzarPartida()"
+      >
+        Comenzar partida
+      </button>
+
+      <div
+        class="panel"
+        [class.panel--espera]="fase() === 'esperando'"
+        [class.panel--verde]="fase() === 'verde'"
+        [class.panel--alerta]="fase() === 'muy_temprano'"
+        [class.panel--ok]="fase() === 'resultado'"
+        [class.panel--clickeable]="
+          fase() === 'esperando' || fase() === 'verde'
+        "
+        (click)="onClickPanel()"
+        role="button"
+        [attr.aria-label]="'Panel del juego, fase ' + fase()"
+      >
+        <p class="panel__text">{{ textoPanel() }}</p>
+
+        @if (fase() === 'resultado') {
+          <p class="panel__badge">{{ calificacion() }}</p>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="btn btn--ghost"
+        *ngIf="fase() === 'muy_temprano' || fase() === 'resultado'"
+        (click)="jugarOtraVez(); $event.stopPropagation()"
+      >
+        Jugar otra vez
+      </button>
+    </section>
+
+    <aside class="ranking-container glass">
+      <h3 class="ranking-title">Ranking</h3>
+      <p class="ranking-hint">Los 5 mejores tiempos (menor ms = mejor).</p>
+
+      <ng-container *ngIf="ranking().length > 0; else sinDatos">
+        <div class="ranking-table-wrap">
+          <table class="ranking-table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Jugador</th>
+                <th scope="col" class="ranking-table__col-tiempo">Tiempo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let item of ranking(); let i = index"
+                [class.ranking-table__row--top]="i === 0"
+              >
+                <td>{{ i + 1 }}</td>
+                <td class="ranking-table__jugador">
+                  {{ item.email || 'Usuario' }}
+                </td>
+                <td class="ranking-table__tiempo">{{ item.tiempo_ms }} ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+
+      <ng-template #sinDatos>
+        <p class="ranking-vacio">No hay partidas aún</p>
+      </ng-template>
+    </aside>
+  </div>
+</div>

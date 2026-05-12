@@ -13,7 +13,7 @@ http = inject(HttpClient);
 
 apiUrl = 'https://api.attackontitanapi.com/characters?name=';
 
-personaje = signal<any | null>(null); // por defecto es null, pero puede ser cualquier tipo de dato
+personaje = signal<any | null>(null);
 
   getName(name: string) {
 

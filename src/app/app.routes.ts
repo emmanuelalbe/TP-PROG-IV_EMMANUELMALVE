@@ -45,6 +45,12 @@ export const routes: Routes = [
     canActivate: [authGuardGuard],
     loadComponent: () => import('./pages/Juegos/mayormenor/mayor-menor').then(m => m.MayorMenor)
   },
+  {
+    path: 'reflejos',
+    canActivate: [authGuardGuard],
+    loadComponent: () =>
+      import('./pages/Juegos/reflejos/reflejos').then((m) => m.Reflejos),
+  },
 
   {
     path: 'login',

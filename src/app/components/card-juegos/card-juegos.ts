@@ -29,9 +29,10 @@ export class CardJuegos {
       description: 'Respondé preguntas de cultura general y competí por categorías. Mientras más aciertos tengas, más rápido completás todas las áreas.'
     },
     {
-      title: 'Juego PROPIO',
+      title: 'Reflejos',
       image: '/image/logo.png',
-      description: 'Un minijuego original del proyecto: simple, rápido y pensado para divertirse. La idea es que sea fácil de aprender y difícil de dominar.'
+      description:
+        'Esperá el verde y tocá lo más rápido posible: medimos tu tiempo de reacción en milisegundos. Superá tu récord y entrá al ranking.',
     }
   ];
 }

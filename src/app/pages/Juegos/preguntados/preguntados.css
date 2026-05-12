@@ -1,16 +1,25 @@
-/* Layout general */
 .contenedor-general {
   min-height: calc(100vh - 70px);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 22px;
   padding: 20px;
   background: linear-gradient(135deg, rgba(79, 70, 229, 0.85), rgba(6, 182, 212, 0.85));
+}
+
+.columna-principal {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  justify-content: center;
 }
 
 .card {
   width: 100%;
   max-width: 720px;
+  flex: 1;
   background: rgba(255, 255, 255, 0.15);
   color: white;
   border-radius: 20px;
@@ -123,4 +132,70 @@ h2 {
   margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid rgba(255,255,255,0.25);
+}
+
+.resultado__error {
+  margin-top: 12px;
+}
+
+.ranking-container {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.ranking-container h3 {
+  margin: 0 0 6px;
+}
+
+.ranking-hint {
+  margin: 0 0 14px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.ranking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.ranking-item:first-child {
+  background: gold;
+  color: black;
+  font-weight: bold;
+}
+
+.ranking-vacio {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+@media (min-width: 900px) {
+  .contenedor-general {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .columna-principal {
+    max-width: 720px;
+  }
+
+  .ranking-container {
+    flex: 0 0 320px;
+    max-width: 320px;
+  }
 }

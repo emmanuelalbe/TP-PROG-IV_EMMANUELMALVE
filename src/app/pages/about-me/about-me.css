@@ -1,4 +1,3 @@
-/* Container general */
 .about-container {
   min-height: calc(100vh - 70px);
   padding: 22px;
@@ -7,7 +6,6 @@
   gap: 18px;
 }
 
-/* Mismo estilo que h1 en card-juegos */
 h1 {
   text-align: center;
   font-size: 70px;
@@ -21,14 +19,12 @@ h1 {
   color: rgb(19, 208, 47);
 }
 
-/* Content */
 .about-content {
   width: 100%;
   max-width: 980px;
   margin: 0 auto;
 }
 
-/* Misma grilla que en card-juegos (home / juegos) */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

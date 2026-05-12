@@ -10,14 +10,12 @@
       <p><strong>Palabra (debug):</strong> {{ palabra }}</p>
     </div>
 
-    <!-- PALABRA -->
     <div class="palabra">
       <span *ngFor="let letra of palabraOculta">
         {{ letra }}
       </span>
     </div>
 
-    <!-- LETRAS -->
     <div class="letras">
       <button 
         *ngFor="let letra of letras"
@@ -28,12 +26,10 @@
       </button>
     </div>
 
-    <!-- REINICIAR -->
     <button (click)="iniciarJuego()">Reiniciar</button>
 
   </div>
 
-  <!-- 🔥 RANKING (AHORA BIEN INTEGRADO) -->
   <div class="ranking-container">
 
     <h3>🏆 Ranking</h3>
@@ -49,7 +45,6 @@
 
     </div>
 
-    <!-- 🔽 fallback -->
     <ng-template #sinDatos>
       <p>No hay partidas aún</p>
     </ng-template>
@@ -58,7 +53,6 @@
 
 </div>
 
-<!-- MODAL -->
 <div class="modal-backdrop" *ngIf="mostrarModal">
   <div class="modal">
     <h2>{{ mensajeModal }}</h2>

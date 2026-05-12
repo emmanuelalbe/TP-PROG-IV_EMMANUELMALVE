@@ -40,7 +40,6 @@ formulario = new FormGroup({
     validators: [
       Validators.required,
       Validators.minLength(6),
-      // min 1 minúscula, 1 mayúscula y 1 número (regla de Supabase)
       Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)
     ]
   })

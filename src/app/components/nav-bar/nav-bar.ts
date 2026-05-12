@@ -24,6 +24,7 @@ export class NavBar {
     { label: 'Ahorcado', route: 'ahorcado', auth: true },
     { label: 'Preguntados', route: 'preguntados', auth: true },
     { label: 'Mayor o Menor', route: 'mayor-menor', auth: true },
+    { label: 'Reflejos', route: 'reflejos', auth: true },
     { label: 'Chat', route: 'chat', auth: true }
   ];
 

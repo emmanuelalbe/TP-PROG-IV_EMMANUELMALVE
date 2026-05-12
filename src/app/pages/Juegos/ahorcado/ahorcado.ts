@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { AhorcadoService } from '../../../config/services/servicio-ahorcado';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../config/services/auth-service';
@@ -10,10 +10,11 @@ import { AuthService } from '../../../config/services/auth-service';
   templateUrl: './ahorcado.html',
   styleUrl: './ahorcado.css'
 })
-export class Ahorcado implements OnInit {
+export class Ahorcado implements OnInit, OnDestroy {
 
   
   authService = inject(AuthService);
+  private rankingAuthSub: { unsubscribe: () => void } | null = null;
   ahorcadoService = inject(AhorcadoService);
 
   palabra: string = '';
@@ -42,15 +43,31 @@ export class Ahorcado implements OnInit {
 
 
   ngOnInit() {
-    this.cargarRanking();
+    void this.cargarRanking();
+    const { data } = this.authService.supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (
+          (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') &&
+          session
+        ) {
+          void this.cargarRanking();
+        }
+      },
+    );
+    this.rankingAuthSub = data.subscription;
     this.iniciarJuego();
+  }
+
+  ngOnDestroy(): void {
+    this.rankingAuthSub?.unsubscribe();
+    this.rankingAuthSub = null;
   }
 
   iniciarJuego() {
 
     this.palabra = this.ahorcadoService.obtenerPalabra().toLowerCase().trim();
 
-    this.palabraArray = this.palabra.split(''); // 🔥 guardado una sola vez
+    this.palabraArray = this.palabra.split('');
 
     this.palabraOculta = this.palabraArray.map(() => '_');
 
@@ -119,7 +136,12 @@ export class Ahorcado implements OnInit {
   }
 
   async cargarRanking() {
-    this.ranking = await this.authService.obtenerRanking();
+    try {
+      this.ranking = await this.authService.obtenerRanking();
+    } catch (e) {
+      console.error('Error ranking Ahorcado', e);
+      this.ranking = [];
+    }
   }
 
   cerrarModal() {

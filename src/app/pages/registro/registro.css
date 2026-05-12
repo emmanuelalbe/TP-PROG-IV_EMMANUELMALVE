@@ -1,5 +1,4 @@
 
-/* Contenedor centrado */
 .card-container {
     max-width: 400px;
     margin: auto;
@@ -10,7 +9,6 @@
     font-family: Arial, sans-serif;
 }
 
-/* Título */
 .card-title {
 
     background: linear-gradient(135deg, #6ec6ff, #42a5f5);
@@ -21,7 +19,6 @@
     font-weight: bold;
 }
 
-/* Formulario */
 .card-form {
     padding: 20px;
 }
@@ -31,7 +28,6 @@
     flex-direction: column;
 }
 
-/* Labels */
 .form-group label {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -42,7 +38,6 @@
 
 }
 
-/* Inputs */
 input {
     padding: 10px;
     border-radius: 8px;
@@ -52,7 +47,6 @@ input {
     font-size: 14px;
 }
 
-/* Botón */
 .btn-submit {
     width: 100%;
     padding: 12px;
@@ -66,12 +60,10 @@ input {
     margin-top: 10px;
 }
 
-/* Hover botón */
 .btn-submit:hover {
     background: #3197f0;
 }
 
-/* ERROR (tu clase existente) */
 .error {
     border: 2px solid rgba(255, 0, 0, 0.437) ;
     background-color: #ffe5e5;
@@ -80,10 +72,10 @@ input {
 #fondo {
     
     background-image:url('/image/fondoRegistro.png');
-    background-size: cover; /* Ajusta la imagen al tamaño de la pantalla */
-    background-repeat: no-repeat; /* Evita que la imagen se repita */
-    background-attachment: fixed; /* La imagen se queda fija al hacer scroll */
-    background-position: center; /* Centra la imagen */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
 
     height: 100vh;
 }

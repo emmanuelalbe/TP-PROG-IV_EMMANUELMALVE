@@ -34,10 +34,25 @@ export class AuthService {
       const user = session?.user;
       this.usuarioActual.set(user ?? null);
 
-      if (user) {
+      if (event === 'SIGNED_IN' && user) {
         this.router.navigateByUrl('home');
       }
     });
+  }
+
+  hydrateUserFromSession(): Promise<void> {
+    return this.supabase.auth.getSession().then(({ data: { session } }) => {
+      this.usuarioActual.set(session?.user ?? null);
+    });
+  }
+
+  private async usuarioParaMutaciones(): Promise<User | null> {
+    const desdeSignal = this.usuarioActual();
+    if (desdeSignal) return desdeSignal;
+    const { data: { session } } = await this.supabase.auth.getSession();
+    const user = session?.user ?? null;
+    if (user) this.usuarioActual.set(user);
+    return user;
   }
 
   private createMensajesChannel(): RealtimeChannel {
@@ -48,7 +63,6 @@ export class AuthService {
     try {
       await this.supabase.removeChannel(this.canal);
     } catch {
-      /* canal ya removido o en estado intermedio */
     }
     this.canal = this.createMensajesChannel();
   }
@@ -127,19 +141,21 @@ export class AuthService {
   }
 
   async obtenerRanking() {
-    const { data, error } = await this.supabase
-      .from('partidas_ahorcado')
-      .select('*')
-      .eq('resultado', 'ganó')
-      .order('tiempo_segundos', { ascending: true })
-      .limit(5);
+    return this.withRankingSessionRetry(async () => {
+      const { data, error } = await this.supabase
+        .from('partidas_ahorcado')
+        .select('*')
+        .eq('resultado', 'ganó')
+        .order('tiempo_segundos', { ascending: true })
+        .limit(5);
 
-    if (error) {
-      console.error(error);
-      return [];
-    }
+      if (error) {
+        console.error(error);
+        return [];
+      }
 
-    return data || [];
+      return data || [];
+    });
   }
 
   async guardarPartidaMayorMenor(datos: { puntaje: number }) {
@@ -159,27 +175,74 @@ export class AuthService {
   }
 
   async obtenerRankingMayorMenor() {
+    return this.withRankingSessionRetry(async () => {
+      const { data, error } = await this.supabase
+        .from('partidas_mayor_menor')
+        .select('puntaje, email')
+        .order('puntaje', { ascending: false })
+        .limit(5);
 
-    const { data, error } = await this.supabase
-      .from('partidas_mayor_menor')
-      .select('puntaje, email')
-      .order('puntaje', { ascending: false })
-      .limit(5);
+      if (error) {
+        console.error(error);
+        return [];
+      }
 
-    if (error) {
-      console.error(error);
-      return [];
-    }
-
-    return data || [];
+      return data || [];
+    });
   }
 
-  // =========================
-  // PREGUNTADOS
-  // =========================
+  async guardarPartidaReflejos(datos: { tiempo_ms: number }): Promise<void> {
+    const user = await this.usuarioParaMutaciones();
+    if (!user) {
+      throw new Error('No hay sesión: iniciá sesión para guardar en el ranking.');
+    }
+
+    const { error } = await this.supabase.from('partidas_reflejos').insert({
+      usuario_id: user.id,
+      email: user.email,
+      tiempo_ms: datos.tiempo_ms,
+    });
+
+    if (error) {
+      console.error('[Reflejos insert]', error.message, error.code, error.details);
+      throw error;
+    }
+  }
+
+  async obtenerRankingReflejos(): Promise<
+    { email: string | null; tiempo_ms: number }[]
+  > {
+    const mapRows = (
+      rows: { email?: string | null; tiempo_ms?: number | string | null }[],
+    ): { email: string | null; tiempo_ms: number }[] =>
+      (rows ?? []).map((row) => ({
+        email: row.email ?? null,
+        tiempo_ms:
+          typeof row.tiempo_ms === 'string'
+            ? parseInt(row.tiempo_ms, 10)
+            : Number(row.tiempo_ms),
+      })).filter((r) => !Number.isNaN(r.tiempo_ms));
+
+    return this.withRankingSessionRetry(async () => {
+      const { data, error } = await this.supabase
+        .from('partidas_reflejos')
+        .select('tiempo_ms, email')
+        .order('tiempo_ms', { ascending: true })
+        .limit(5);
+
+      if (error) {
+        console.error('[Reflejos select]', error.message, error.code, error.details);
+        throw error;
+      }
+      return mapRows(data || []);
+    });
+  }
+
   async guardarPartidaPreguntados(datos: { aciertos: number; total_preguntas: number }) {
-    const user = this.usuarioActual();
-    if (!user) return;
+    const user = await this.usuarioParaMutaciones();
+    if (!user) {
+      throw new Error('No hay sesión: iniciá sesión para guardar la partida.');
+    }
 
     const { error } = await this.supabase
       .from('partidas_preguntados')
@@ -190,7 +253,34 @@ export class AuthService {
         total_preguntas: datos.total_preguntas
       });
 
-    if (error) console.error(error);
+    if (error) {
+      console.error('[Preguntados insert]', error.message, error.code, error.details);
+      throw error;
+    }
+  }
+
+  async obtenerRankingPreguntados(): Promise<
+    { email: string | null; aciertos: number; total_preguntas: number }[]
+  > {
+    return this.withRankingSessionRetry(async () => {
+      const { data, error } = await this.supabase
+        .from('partidas_preguntados')
+        .select('aciertos, total_preguntas, email')
+        .order('aciertos', { ascending: false })
+        .order('total_preguntas', { ascending: true })
+        .limit(5);
+
+      if (error) {
+        console.error('[Preguntados ranking]', error.message, error.code, error.details);
+        return [];
+      }
+
+      return (data || []) as {
+        email: string | null;
+        aciertos: number;
+        total_preguntas: number;
+      }[];
+    });
   }
 
   async traerMensajesYaExistentes() {
@@ -214,5 +304,14 @@ export class AuthService {
     });
 
     if (error) console.error(error);
+  }
+
+  private async withRankingSessionRetry<T>(load: () => Promise<T[]>): Promise<T[]> {
+    let rows = await load();
+    if (rows.length === 0) {
+      await this.supabase.auth.refreshSession();
+      rows = await load();
+    }
+    return rows;
   }
 }

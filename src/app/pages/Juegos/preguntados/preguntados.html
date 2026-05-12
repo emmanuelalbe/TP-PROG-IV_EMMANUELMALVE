@@ -1,4 +1,5 @@
 <div class="contenedor-general">
+  <div class="columna-principal">
   <div class="card">
     <h2>Preguntados</h2>
 
@@ -47,7 +48,28 @@
       <h3>Resultado</h3>
       <p>Acertaste <strong>{{ aciertos }}</strong> de <strong>{{ preguntas.length }}</strong>.</p>
       <p *ngIf="guardando">Guardando partida...</p>
+      <div *ngIf="errorGuardado" class="estado error resultado__error">
+        {{ errorGuardado }}
+      </div>
       <button class="btn primario" (click)="iniciarPartida()">Jugar otra vez</button>
     </div>
   </div>
+  </div>
+
+  <aside class="ranking-container">
+    <h3>Ranking</h3>
+    <p class="ranking-hint">Top 5 por aciertos (más aciertos = mejor).</p>
+
+    <div *ngIf="ranking.length > 0; else sinDatosRanking">
+      <div class="ranking-item" *ngFor="let item of ranking; let i = index">
+        <span>#{{ i + 1 }}</span>
+        <span>{{ item.email || 'Usuario' }}</span>
+        <span>{{ item.aciertos }}/{{ item.total_preguntas }}</span>
+      </div>
+    </div>
+
+    <ng-template #sinDatosRanking>
+      <p class="ranking-vacio">No hay partidas aún</p>
+    </ng-template>
+  </aside>
 </div>

@@ -33,7 +33,6 @@ export class App {
 
   protected readonly title = signal('TrabajoPractico');
 
-  //Aca se debe conectar los servicios o la api, para que el componente pueda acceder a los datos y mostrarlos en la vista.
   api = inject(Api);
 
   authService = inject(AuthService)

@@ -1,21 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MayorMenor } from './mayor-menor';
+import { Reflejos } from './reflejos';
 import { AuthService } from '../../../config/services/auth-service';
 
-describe('MayorMenor', () => {
-  let component: MayorMenor;
-  let fixture: ComponentFixture<MayorMenor>;
+describe('Reflejos', () => {
+  let component: Reflejos;
+  let fixture: ComponentFixture<Reflejos>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MayorMenor],
+      imports: [Reflejos],
       providers: [
         {
           provide: AuthService,
           useValue: {
-            obtenerRankingMayorMenor: async () => [],
-            guardarPartidaMayorMenor: async () => {},
+            guardarPartidaReflejos: async () => {},
+            obtenerRankingReflejos: async () => [],
             supabase: {
               auth: {
                 onAuthStateChange: () => ({
@@ -28,7 +27,7 @@ describe('MayorMenor', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MayorMenor);
+    fixture = TestBed.createComponent(Reflejos);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
